@@ -1,0 +1,27 @@
+# Container images (too large for git, use git-lfs or Zenodo)
+*.sif
+*.img
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# LaTeX build artifacts
+*.aux
+*.log
+*.out
+*.bbl
+*.blg
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Generated figures (can be reproduced from scripts)
+figures/*.png
+figures/*.pdf

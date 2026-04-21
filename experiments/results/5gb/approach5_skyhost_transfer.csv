@@ -1,0 +1,4 @@
+run_id,dataset_gb,hpc_read_s,hpc_filter_s,hpc_produce_s,hpc_total_s,hpc_produce_mbps,filtered_records,consumer_first_record_s,consumer_active_s,consumer_total_s,consumer_records,consumer_bytes_mb,consumer_throughput_mbps,e2e_s
+approach5_skyhost_run1,5,10.69,15.39,42.01,68.11,13.99,9317527,36.26,158.74,195.00,9317527,1571.75,9.90,263
+approach5_skyhost_run2,5,11.33,14.93,41.68,67.96,14.10,9317527,34.72,147.57,182.29,9317527,1571.75,10.65,250
+approach5_skyhost_run3,5,11.17,15.58,41.45,68.22,14.18,9317527,34.02,146.26,180.28,9317527,1571.75,10.75,248

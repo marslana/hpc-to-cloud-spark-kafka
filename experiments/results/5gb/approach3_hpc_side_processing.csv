@@ -1,0 +1,4 @@
+run_id,dataset_gb,spark_read_s,spark_filter_s,spark_write_s,spark_total_s,filtered_records,filtered_mb,scp_time_s,ingest_time_s,ingest_mbps,consumer_first_record_s,consumer_active_s,consumer_total_s,consumer_records,consumer_bytes_mb,e2e_s
+approach3_run1,5,10.51,15.26,23.64,49.41,9317527,590.0,41,81.84,7.15,102.88,80.21,183.09,9317527,576.53,246
+approach3_run2,5,11.38,15.25,23.45,50.08,9317527,590.0,41,81.42,7.19,102.61,79.89,182.50,9317527,576.53,245
+approach3_run3,5,10.54,15.76,23.60,49.90,9317527,590.0,41,81.56,7.17,102.59,80.06,182.65,9317527,576.53,245
