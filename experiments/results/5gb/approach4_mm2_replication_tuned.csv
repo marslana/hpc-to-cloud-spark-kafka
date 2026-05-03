@@ -1,0 +1,4 @@
+run_id,dataset_gb,hpc_read_s,hpc_filter_s,hpc_produce_s,hpc_total_s,hpc_produce_mbps,filtered_records,consumer_first_record_s,consumer_active_s,consumer_total_s,consumer_records,consumer_bytes_mb,consumer_throughput_mbps,e2e_s
+approach4_mm2_run1,5,11.46,14.08,40.29,65.85,14.59,9317527,34.76,183.57,218.33,9317527,1571.75,8.56,339
+approach4_mm2_run2,5,11.47,13.87,40.77,66.13,14.42,9317527,34.51,184.77,219.29,9317527,1571.75,8.51,339
+approach4_mm2_run3,5,11.26,15.39,40.2,66.87,14.62,9317527,35.83,183.62,219.45,9317527,1571.75,8.56,341

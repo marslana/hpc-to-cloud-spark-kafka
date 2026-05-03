@@ -1,0 +1,4 @@
+run_id,input_file,input_size_mb,raw_records,filtered_records,filter_ratio,estimated_filtered_mb,bootstrap_servers,topic,partitions,acks,batch_size,read_time_s,filter_time_s,kafka_produce_time_s,total_time_s,kafka_throughput_mbps
+approach2_run1,eea_airquality_5gb.csv,5291.7,83886080,9317527,0.1111,587.8,<US_EAST_IP>:9092,a2-5gb-run1,8,1,16384,11.82,16.03,642.55,670.43,0.91
+approach2_run2,eea_airquality_5gb.csv,5291.7,83886080,9317527,0.1111,587.8,<US_EAST_IP>:9092,a2-5gb-run2,8,1,16384,11.13,15.64,642.89,669.68,0.91
+approach2_run3,eea_airquality_5gb.csv,5291.7,83886080,9317527,0.1111,587.8,<US_EAST_IP>:9092,a2-5gb-run3,8,1,16384,11.34,16.23,642.2,669.79,0.92

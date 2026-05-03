@@ -1,0 +1,4 @@
+run_id,dataset_gb,scp_time_s,spark_read_s,spark_filter_s,kafka_produce_s,spark_total_s,filtered_records,consumer_first_record_s,consumer_total_s,consumer_records,consumer_bytes_mb,e2e_s
+approach1_run1,5,299,12.33,18.66,29.84,60.86,9317527,340.82,369.98,9317527,1571.75,432
+approach1_run2,5,299,11.43,18.21,29.91,59.58,9317527,338.17,367.40,9317527,1571.75,429
+approach1_run3,5,301,11.44,17.52,27.66,56.64,9317527,338.77,365.75,9317527,1571.75,427

@@ -1,0 +1,127 @@
+Bootstrap: docker
+From: ubuntu:22.04
+
+%labels
+    Version 1.0
+    Description Singularity container for Kafka-Spark-HDFS benchmarking on HPC
+
+%environment
+    export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+    export SPARK_HOME=/opt/spark
+    export HADOOP_HOME=/opt/hadoop
+    export KAFKA_HOME=/opt/kafka
+    export ZOOKEEPER_HOME=/opt/zookeeper
+    export PATH=$SPARK_HOME/bin:$SPARK_HOME/sbin:$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$KAFKA_HOME/bin:$ZOOKEEPER_HOME/bin:$JAVA_HOME/bin:$PATH
+    export HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop
+    export SPARK_CONF_DIR=$SPARK_HOME/conf
+    export LD_LIBRARY_PATH=$HADOOP_HOME/lib/native:$LD_LIBRARY_PATH
+    export PYSPARK_PYTHON=python3
+
+%post
+    apt-get update && apt-get install -y \
+        openjdk-11-jdk \
+        python3 python3-pip \
+        wget curl netcat-openbsd procps \
+        && apt-get clean
+
+    # Python packages
+    pip3 install kafka-python pyspark==3.4.0 numpy
+
+    # ---- Apache Spark 3.4.1 ----
+    SPARK_VERSION=3.4.1
+    HADOOP_PROFILE=3
+    wget -q https://archive.apache.org/dist/spark/spark-${SPARK_VERSION}/spark-${SPARK_VERSION}-bin-hadoop${HADOOP_PROFILE}.tgz \
+        -O /tmp/spark.tgz
+    tar -xzf /tmp/spark.tgz -C /opt/
+    mv /opt/spark-${SPARK_VERSION}-bin-hadoop${HADOOP_PROFILE} /opt/spark
+    rm /tmp/spark.tgz
+
+    # ---- Apache Kafka 2.8.2 ----
+    KAFKA_VERSION=2.8.2
+    SCALA_VERSION=2.13
+    wget -q https://archive.apache.org/dist/kafka/${KAFKA_VERSION}/kafka_${SCALA_VERSION}-${KAFKA_VERSION}.tgz \
+        -O /tmp/kafka.tgz
+    tar -xzf /tmp/kafka.tgz -C /opt/
+    mv /opt/kafka_${SCALA_VERSION}-${KAFKA_VERSION} /opt/kafka
+    rm /tmp/kafka.tgz
+
+    # ---- Apache ZooKeeper 3.7.2 ----
+    ZK_VERSION=3.7.2
+    wget -q https://archive.apache.org/dist/zookeeper/zookeeper-${ZK_VERSION}/apache-zookeeper-${ZK_VERSION}-bin.tar.gz \
+        -O /tmp/zk.tgz
+    tar -xzf /tmp/zk.tgz -C /opt/
+    mv /opt/apache-zookeeper-${ZK_VERSION}-bin /opt/zookeeper
+    rm /tmp/zk.tgz
+
+    # ---- Apache Hadoop 3.3.6 ----
+    HADOOP_VERSION=3.3.6
+    wget -q https://archive.apache.org/dist/hadoop/common/hadoop-${HADOOP_VERSION}/hadoop-${HADOOP_VERSION}.tar.gz \
+        -O /tmp/hadoop.tgz
+    tar -xzf /tmp/hadoop.tgz -C /opt/
+    mv /opt/hadoop-${HADOOP_VERSION} /opt/hadoop
+    rm /tmp/hadoop.tgz
+
+    # Set JAVA_HOME for Hadoop
+    echo "export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64" >> /opt/hadoop/etc/hadoop/hadoop-env.sh
+
+    # Create log directories
+    mkdir -p /opt/spark/logs /opt/spark/work /opt/spark/conf
+    mkdir -p /opt/hadoop/logs
+    mkdir -p /opt/kafka/logs /opt/kafka/config
+    mkdir -p /opt/zookeeper/logs
+    mkdir -p /tmp/kafka-logs /tmp/zookeeper /tmp/hadoop
+
+%runscript
+    # Entry points for different services
+    case "$1" in
+        sparkMaster)
+            exec /opt/spark/sbin/start-master.sh --host $(hostname) --port 7078
+            ;;
+        sparkWorker)
+            shift
+            exec /opt/spark/sbin/start-worker.sh "$@"
+            ;;
+        sparkHDFSNamenode)
+            /opt/hadoop/bin/hdfs namenode -format -force 2>/dev/null
+            exec /opt/hadoop/bin/hdfs namenode
+            ;;
+        sparkHDFSDatanode)
+            exec /opt/hadoop/bin/hdfs datanode
+            ;;
+        zookeeper)
+            exec /opt/zookeeper/bin/zkServer.sh start-foreground
+            ;;
+        kafkaBroker)
+            shift
+            exec /opt/kafka/bin/kafka-server-start.sh "$@"
+            ;;
+        *)
+            echo "Usage: singularity run <image> {sparkMaster|sparkWorker|sparkHDFSNamenode|sparkHDFSDatanode|zookeeper|kafkaBroker} [args]"
+            ;;
+    esac
+
+%test
+    java -version
+    python3 --version
+    /opt/spark/bin/spark-submit --version 2>&1 | head -3
+    /opt/kafka/bin/kafka-topics.sh --version 2>&1 | head -1
+    echo "All components verified."
+
+%help
+    Singularity container for benchmarking Kafka-Spark-HDFS integration on HPC.
+
+    Services available:
+      sparkMaster       - Start Spark Master
+      sparkWorker       - Start Spark Worker (pass master URL as arg)
+      sparkHDFSNamenode - Start HDFS NameNode (auto-formats on first run)
+      sparkHDFSDatanode - Start HDFS DataNode
+      zookeeper         - Start ZooKeeper (foreground)
+      kafkaBroker       - Start Kafka Broker (pass config file as arg)
+
+    Example:
+      singularity run sparkhdfs.sif sparkMaster
+      singularity run sparkhdfs.sif sparkWorker spark://master:7078
+      singularity run sparkhdfs.sif kafkaBroker /opt/kafka/config/server.properties
+
+    Build:
+      sudo singularity build sparkhdfs.sif sparkhdfs.def
