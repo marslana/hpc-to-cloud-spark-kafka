@@ -20,7 +20,7 @@ Evaluation of Apache Spark and Apache Kafka for streaming HPC-processed scientif
 | # | Approach              | Type   | E2E (s) | First Record Latency (s) |
 | - | --------------------- | ------ | ------- | ------------------------ |
 | 1 | Cloud-Side Processing | Batch  | 368     | 339                      |
-| 2 | Direct Producer       | Stream | 670     | 36                       |
+| 2 | Direct Producer       | Stream | 667     | 35                       |
 | 3 | HPC-Side Processing   | Batch  | 183     | 103                      |
 | 4 | MM2 Replication       | Stream | 219     | 35                       |
 | 5 | SkyHOST               | Stream | 186     | 35                       |

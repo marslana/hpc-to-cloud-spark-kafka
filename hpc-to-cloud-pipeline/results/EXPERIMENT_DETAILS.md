@@ -52,7 +52,7 @@ python3 hpc-to-cloud-pipeline/scripts/generate_eea_dataset.py \
 - Spark Kafka producer linger: 10 ms
 - Number of runs per approach: 3
 - Consumer idle timeout in scripts: 60 s after the last record (used only by the orchestrator to declare the run finished, not part of `consumer_total_s`)
-- E2E metric reported in the paper: `consumer_total_s` for Approaches 1, 3, 4, 5 and `total_time_s` for Approach 2. The consumer is launched a few seconds before the pipeline kickoff, so its clock covers the full HPC processing, intermediate transit, and final delivery.
+- E2E metric reported in the paper: `consumer_total_s` averaged over 3 runs for all five approaches, measured by a consumer script on the destination broker. The consumer is launched a few seconds before the pipeline kickoff so its clock covers the full HPC processing, intermediate transit, and final delivery. The consumer's post-completion idle-timeout window is excluded from both `consumer_total_s` and `first_record_latency_s`.
 
 ## Approach-Specific Configuration
 
@@ -66,6 +66,7 @@ python3 hpc-to-cloud-pipeline/scripts/generate_eea_dataset.py \
 
 - Run Spark filtering on HPC.
 - Produce filtered records directly to the `us-east-1` Kafka broker over WAN.
+- E2E and FRL are the 3-run mean of consumer-side measurements (`approach2_direct_producer_consumer.csv`). A first cold-start invocation of the Spark application observed a 57 s FRL due to JVM warm-up and Kafka package fetching, and was excluded from the 3-run mean in line with the same treatment applied to SkyHOST. Producer-side Spark phase timings from the original campaign are retained in `approach2_direct_producer.csv` for reference.
 
 ### A3 HPC-Side Processing
 
@@ -91,7 +92,7 @@ python3 hpc-to-cloud-pipeline/scripts/generate_eea_dataset.py \
 | # | Approach | Type | E2E (s) | FRL (s) | 
 |---|---|---|---:|---:|---|
 | 1 | Cloud-Side Processing | Batch | 368 | 339 | 
-| 2 | Direct Producer | Stream | 670 | 36 | 
+| 2 | Direct Producer | Stream | 667 | 35 | 
 | 3 | HPC-Side Processing | Batch | 183 | 103 | 
 | 4 | MM2 Replication | Stream | 219 | 35 | 
 | 5 | SkyHOST | Stream | 186 | 35 | 
@@ -99,7 +100,8 @@ python3 hpc-to-cloud-pipeline/scripts/generate_eea_dataset.py \
 ## Raw Result Files
 
 - `hpc-to-cloud-pipeline/results/approach1_cloud_side_processing.csv`
-- `hpc-to-cloud-pipeline/results/approach2_direct_producer.csv`
+- `hpc-to-cloud-pipeline/results/approach2_direct_producer.csv` (producer-side Spark timings)
+- `hpc-to-cloud-pipeline/results/approach2_direct_producer_consumer.csv` (consumer-side, 3 warm runs)
 - `hpc-to-cloud-pipeline/results/approach3_hpc_side_processing.csv`
 - `hpc-to-cloud-pipeline/results/approach4_mm2_replication_tuned.csv`
 - `hpc-to-cloud-pipeline/results/approach5_skyhost_transfer.csv`

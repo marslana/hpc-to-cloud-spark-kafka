@@ -20,7 +20,7 @@ This file summarizes the final 5 GB results used in the paper.
 | # | Approach | Type | E2E (s) | FRL (s) |
 |---|---|---|---:|---:|
 | 1 | Cloud-Side Processing | Batch | 368 | 339 |
-| 2 | Direct Producer | Stream | 670 | 36 |
+| 2 | Direct Producer | Stream | 667 | 35 |
 | 3 | HPC-Side Processing | Batch | 183 | 103 |
 | 4 | MM2 Replication | Stream | 219 | 35 |
 | 5 | SkyHOST | Stream | 186 | 35 |
@@ -36,7 +36,7 @@ Direct Producer is slow because the Spark Kafka producer pays the HPC-to-US-East
 | Approach | Raw CSV |
 |---|---|
 | Cloud-Side Processing | `5gb/approach1_cloud_side_processing.csv` |
-| Direct Producer | `5gb/approach2_direct_producer.csv` |
+| Direct Producer | `5gb/approach2_direct_producer.csv` (producer-side Spark) and `5gb/approach2_direct_producer_consumer.csv` (consumer-side, 3 warm runs) |
 | HPC-Side Processing | `5gb/approach3_hpc_side_processing.csv` |
 | MM2 Replication | `5gb/approach4_mm2_replication_tuned.csv` |
 | SkyHOST | `5gb/approach5_skyhost_transfer.csv` |

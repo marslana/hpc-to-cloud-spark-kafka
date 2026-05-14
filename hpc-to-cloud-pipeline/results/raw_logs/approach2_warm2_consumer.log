@@ -1,0 +1,35 @@
+[19:38:29] Consumer started, waiting for records on 'a2-5gb-run1'...
+[19:39:04] FIRST RECORD received! latency=34.62s after consumer start
+  [19:39:37] 500,000 records (84.3 MB, 33.3s)
+  [19:40:11] 1,000,000 records (168.7 MB, 66.5s)
+  [19:40:44] 1,500,000 records (253.0 MB, 99.9s)
+  [19:41:18] 2,000,000 records (337.4 MB, 133.7s)
+  [19:41:51] 2,500,000 records (421.7 MB, 167.0s)
+  [19:42:24] 3,000,000 records (506.1 MB, 200.4s)
+  [19:42:58] 3,500,000 records (590.4 MB, 233.7s)
+  [19:43:31] 4,000,000 records (674.8 MB, 267.0s)
+  [19:44:05] 4,500,000 records (759.1 MB, 300.4s)
+  [19:44:38] 5,000,000 records (843.4 MB, 333.7s)
+  [19:45:11] 5,500,000 records (927.8 MB, 367.1s)
+  [19:45:45] 6,000,000 records (1012.1 MB, 400.5s)
+  [19:46:18] 6,500,000 records (1096.5 MB, 433.8s)
+  [19:46:51] 7,000,000 records (1180.8 MB, 467.2s)
+  [19:47:25] 7,500,000 records (1265.2 MB, 500.7s)
+  [19:47:58] 8,000,000 records (1349.5 MB, 534.1s)
+  [19:48:32] 8,500,000 records (1433.8 MB, 567.5s)
+  [19:49:05] 9,000,000 records (1518.2 MB, 600.9s)
+[19:50:36] Idle timeout after 60000ms, stopping.
+
+============================================================
+CONSUMER RESULTS
+============================================================
+  run_id:                approach2_run1
+  records:               9317527
+  bytes_mb:              1571.75
+  first_record_latency:  34.62s
+  active_duration_s:     631.63
+  consumer_total_s:      666.25
+  throughput_mbps:       2.49
+============================================================
+CONSUMER_CSV:approach2_run1,9317527,1571.75,34.62,631.63,666.25,2.49
+Results appended to /home/ubuntu/results/approach2_consumer.csv
