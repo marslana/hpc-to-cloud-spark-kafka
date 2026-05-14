@@ -1,4 +1,0 @@
-run_id,records,bytes_mb,first_record_latency_s,active_duration_s,consumer_total_s,throughput_mbps
-approach2_warm1,9317527,1571.75,35.14,630.65,665.80,2.49
-approach2_warm2,9317527,1571.75,34.62,631.63,666.25,2.49
-approach2_warm3,9317527,1571.75,35.01,633.66,668.66,2.48

@@ -32,7 +32,7 @@ Edit the placeholders in `configs/experiment.conf` before running.
 | # | Approach              | Type   | E2E (s) | FRL (s) | 
 | - | --------------------- | ------ | ------- | ------- | 
 | 1 | Cloud-Side Processing | Batch  | 368     | 339     | 
-| 2 | Direct Producer       | Stream | 667     | 35      | 
+| 2 | Direct Producer       | Stream | 676     | 36      | 
 | 3 | HPC-Side Processing   | Batch  | 183     | 103     | 
 | 4 | MM2 Replication       | Stream | 219     | 35      | 
 | 5 | SkyHOST               | Stream | 186     | 35      | 
