@@ -18,11 +18,13 @@ sudo sysctl -w net.ipv4.tcp_congestion_control=bbr
 
 ## Impact on Final 5GB MM2 Performance
 
-| Metric | Tuned Result |
-|--------|--------------|
-| Cross-region throughput | 8.54 MB/s |
-| E2E time | 219 s |
-| First-record latency | 35 s |
+3-run mean (standard deviation in parentheses).
+
+| Metric                  | Tuned Result       |
+|-------------------------|--------------------|
+| Cross-region throughput | 7.94 MB/s          |
+| E2E time                | 234 s (4.6)        |
+| First-record latency    | 35.6 s (1.4)       |
 
 ## Why This Matters
 

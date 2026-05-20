@@ -15,17 +15,25 @@ Evaluation of Apache Spark and Apache Kafka for streaming HPC-processed scientif
 | A4 | MirrorMaker 2         | Stream | Spark to regional Kafka broker, MM2 replicates cross-region     |
 | A5 | SkyHOST               | Stream | Spark to regional Kafka broker, SkyHOST transfers cross-region  |
 
-## Key Results (5 GB EEA air-quality dataset)
+## Key Results (5 GB EEA air-quality dataset, 3-run mean)
 
-| # | Approach              | Type   | E2E (s) | First Record Latency (s) |
-| - | --------------------- | ------ | ------- | ------------------------ |
-| 1 | Cloud-Side Processing | Batch  | 368     | 339                      |
-| 2 | Direct Producer       | Stream | 676     | 36                       |
-| 3 | HPC-Side Processing   | Batch  | 183     | 103                      |
-| 4 | MM2 Replication       | Stream | 219     | 35                       |
-| 5 | SkyHOST               | Stream | 186     | 35                       |
+| # | Approach              | Type   | E2E (s) | First Record Latency (s) | Throughput (MB/s) |
+| - | --------------------- | ------ | ------- | ------------------------ | ----------------- |
+| 1 | Cloud-Side Processing | Batch  | 368     | 339                      | -                 |
+| 2 | Direct Producer       | Stream | 687     | 35                       | 2.45              |
+| 3 | HPC-Side Processing   | Batch  | 187     | 103                      | 6.90              |
+| 4 | MM2 Replication       | Stream | 234     | 36                       | 7.94              |
+| 5 | SkyHOST               | Stream | 210     | 36                       | 9.04              |
 
-HPC-Side batch processing achieves the fastest completion (183 s), but no record reaches the destination until the file transfer stage finishes. SkyHOST matches this within 2% while exposing the first record 3x earlier (35 s vs 103 s), which makes it practical for recurring HPC-to-cloud workloads where incremental data availability matters.
+### Inter-batch latency (gap between successive 1,000-record samples, ms)
+
+| Approach        | P90 | P95 | P99 |
+| --------------- | --- | --- | --- |
+| Direct Producer |  95 | 109 | 128 |
+| MM2 Replication |  65 | 132 | 314 |
+| SkyHOST         |  84 |  89 | 132 |
+
+HPC-Side batch processing achieves the fastest completion (187 s), but no record reaches the destination until the file transfer stage finishes (103 s first-record latency). SkyHOST is within 13% of that completion time while exposing the first record ~3x earlier (36 s vs 103 s) and improving end-to-end time over MM2 by 10% (210 s vs 234 s) with a 2.4x lower P99 inter-batch latency (132 ms vs 314 ms), which makes it practical for recurring HPC-to-cloud workloads where incremental data availability matters.
 
 ## Repository Layout
 

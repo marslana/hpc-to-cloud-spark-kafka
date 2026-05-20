@@ -29,15 +29,25 @@ Edit the placeholders in `configs/experiment.conf` before running.
 
 ## Final 5 GB results
 
-| # | Approach              | Type   | E2E (s) | FRL (s) | 
-| - | --------------------- | ------ | ------- | ------- | 
-| 1 | Cloud-Side Processing | Batch  | 368     | 339     | 
-| 2 | Direct Producer       | Stream | 676     | 36      | 
-| 3 | HPC-Side Processing   | Batch  | 183     | 103     | 
-| 4 | MM2 Replication       | Stream | 219     | 35      | 
-| 5 | SkyHOST               | Stream | 186     | 35      | 
+3-run mean (standard deviation in parentheses).
 
-Numbers are 3-run averages. The full breakdown is in `results/FINAL_COMPARISON.md` and `results/EXPERIMENT_DETAILS.md`.
+| # | Approach              | Type   | E2E (s)    | FRL (s)     | TP (MB/s) |
+| - | --------------------- | ------ | ---------- | ----------- | --------- |
+| 1 | Cloud-Side Processing | Batch  | 368        | 339         | -         |
+| 2 | Direct Producer       | Stream | 687        | 35.8 (0.4)  | 2.45      |
+| 3 | HPC-Side Processing   | Batch  | 187 (1.2)  | 103.2 (1.2) | 6.90      |
+| 4 | MM2 Replication       | Stream | 234 (4.6)  | 35.6 (1.4)  | 7.94      |
+| 5 | SkyHOST               | Stream | 210 (6.8)  | 36.2 (0.6)  | 9.04      |
+
+Inter-batch latency at the destination consumer (gap between successive 1,000-record samples, ms):
+
+| Approach        | P90 | P95 | P99 |
+| --------------- | --- | --- | --- |
+| Direct Producer |  95 | 109 | 128 |
+| MM2 Replication |  65 | 132 | 314 |
+| SkyHOST         |  84 |  89 | 132 |
+
+The full breakdown is in `results/FINAL_COMPARISON.md` and `results/EXPERIMENT_DETAILS.md`.
 
 ## How to reproduce
 
