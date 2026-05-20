@@ -89,13 +89,37 @@ python3 hpc-to-cloud-pipeline/scripts/generate_eea_dataset.py \
 
 ## Final 5 GB Results
 
-| # | Approach | Type | E2E (s) | FRL (s) | 
-|---|---|---|---:|---:|---|
-| 1 | Cloud-Side Processing | Batch | 368 | 339 | 
-| 2 | Direct Producer | Stream | 676 | 36 | 
-| 3 | HPC-Side Processing | Batch | 183 | 103 | 
-| 4 | MM2 Replication | Stream | 219 | 35 | 
-| 5 | SkyHOST | Stream | 186 | 35 | 
+3-run mean (standard deviation in parentheses).
+
+| # | Approach | Type | E2E (s) | FRL (s) | TP (MB/s) |
+|---|---|---|---:|---:|---:|
+| 1 | Cloud-Side Processing | Batch  | 368 | 339   | —    |
+| 2 | Direct Producer       | Stream | 676 (0.6) | 35.8 (0.4) | 2.45 |
+| 3 | HPC-Side Processing   | Batch  | 187 (1.2) | 103.2 (1.2) | 6.90 |
+| 4 | MM2 Replication       | Stream | 234 (4.6) | 35.6 (1.4) | 7.94 |
+| 5 | SkyHOST               | Stream | 210 (6.8) | 36.2 (0.6) | 9.04 |
+
+Inter-batch latency at the destination consumer (gap between successive
+1,000-record samples) for the three streaming approaches:
+
+| Approach | P50 | P90 | P95 | P99 |
+|---|---:|---:|---:|---:|
+| Direct Producer | 84.57 |  95.05 | 108.79 | 127.59 |
+| MM2 Replication |  1.52 |  64.97 | 131.92 | 314.43 |
+| SkyHOST         |  1.78 |  83.53 |  89.04 | 131.63 |
+
+## Network Characterization
+
+See `network_characterization.md` for `iperf3` single-stream bandwidth and
+TCP-handshake RTT measurements on the three relevant links
+(Aion -> eu-central-1, Aion -> us-east-1, eu-central-1 -> us-east-1).
+
+## SkyHOST Inter-Gateway TCP Verification
+
+See `raw_logs/skyhost_inter_gw_tcp_snapshot.txt` for a snapshot of the
+established TCP connections between the EU and US SkyHOST gateway VMs during a
+live A5 run, confirming 8 parallel data connections (matching
+`--send-connections 8`) plus the control RPC channel on port 8081.
 
 ## Raw Result Files
 
@@ -104,4 +128,5 @@ python3 hpc-to-cloud-pipeline/scripts/generate_eea_dataset.py \
 - `hpc-to-cloud-pipeline/results/approach3_hpc_side_processing.csv`
 - `hpc-to-cloud-pipeline/results/approach4_mm2_replication_tuned.csv`
 - `hpc-to-cloud-pipeline/results/approach5_skyhost_transfer.csv`
+- `hpc-to-cloud-pipeline/results/raw_logs/<approach>_run*_timestamps.csv` (per-record arrival samples used for tail-latency analysis)
 

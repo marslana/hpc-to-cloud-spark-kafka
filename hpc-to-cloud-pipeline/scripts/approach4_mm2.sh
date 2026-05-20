@@ -95,6 +95,8 @@ MMEOF
             --idle-timeout-ms $CONSUMER_IDLE_TIMEOUT_MS \
             --output ~/results/${APPROACH}_consumer.csv \
             --run-id $RUN_ID \
+            --timestamps-csv ~/results/${RUN_ID}_timestamps.csv \
+            --ts-sample-every 1000 \
             > ~/results/${RUN_ID}_consumer.log 2>&1 &
         echo \$!
     " > /tmp/consumer_pid_${run}
@@ -111,6 +113,7 @@ MMEOF
         --bind $HOME/pipeline_data:/opt/dataset \
         --bind "${OUT_DIR}":/opt/results \
         --bind $HOME/experiments:/opt/experiments \
+        --bind $HOME/experiments/5gb/scripts:/opt/scripts \
         $SIF \
         spark-submit \
             --master "$SPARK_MASTER" \
@@ -176,11 +179,13 @@ MMEOF
     log "  Consumer records:  ${CONS_RECORDS}"
     log "  E2E:               ${E2E_TIME}s"
 
+    set +e
     # Cleanup: stop MM2, delete topics
-    ssh $SSH_OPTS_FRA ${EC2_USER}@${EC2_FRANKFURT_IP} "pkill -f 'connect-mirror-maker' 2>/dev/null || true"
+    ssh $SSH_OPTS_FRA ${EC2_USER}@${EC2_FRANKFURT_IP} "sudo docker exec kafka pkill -f connect-mirror-maker 2>/dev/null || true"
     delete_topic_remote "$EC2_FRANKFURT_IP" "$SRC_TOPIC" "$SSH_OPTS_FRA"
     delete_topic_remote "$EC2_US_EAST_IP" "$DST_TOPIC"
     sleep 10
+    set -e
 done
 
 log "═══════════════════════════════════════════════════════"

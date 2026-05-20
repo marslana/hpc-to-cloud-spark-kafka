@@ -92,6 +92,8 @@ for run in $(seq 1 $NUM_RUNS); do
             --idle-timeout-ms $CONSUMER_IDLE_TIMEOUT_MS \
             --output ~/results/${APPROACH}_consumer.csv \
             --run-id $RUN_ID \
+            --timestamps-csv ~/results/${RUN_ID}_timestamps.csv \
+            --ts-sample-every 1000 \
             > ~/results/${RUN_ID}_consumer.log 2>&1 &
         echo \$!
     " > /tmp/consumer_pid_${run}
@@ -108,6 +110,7 @@ for run in $(seq 1 $NUM_RUNS); do
         --bind $HOME/pipeline_data:/opt/dataset \
         --bind "${OUT_DIR}":/opt/results \
         --bind $HOME/experiments:/opt/experiments \
+        --bind $HOME/experiments/5gb/scripts:/opt/scripts \
         $SIF \
         spark-submit \
             --master "$SPARK_MASTER" \
@@ -129,6 +132,9 @@ for run in $(seq 1 $NUM_RUNS); do
     HPC_WALL=$((HPC_WALL_END - E2E_START))
     log "  HPC → Frankfurt done in ${HPC_WALL}s"
     log "  SkyHOST is now transferring to US-East..."
+    log "  TIP: from another shell on ${EC2_FRANKFURT_IP}, run:"
+    log "       ss -tn dst ${EC2_US_EAST_IP} | grep ESTAB | wc -l"
+    log "       (expect ~8 ESTABLISHED TCP connections to dest gateway)"
 
     SPARK_LOG="${OUT_DIR}/${RUN_ID}_spark.log"
     HPC_READ=$(grep -oP 'read_time_s: \K[0-9.]+' "$SPARK_LOG" || echo "0")

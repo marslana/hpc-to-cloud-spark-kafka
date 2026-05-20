@@ -48,6 +48,8 @@ for run in $(seq 1 $NUM_RUNS); do
             --idle-timeout-ms $CONSUMER_IDLE_TIMEOUT_MS \
             --output ~/results/${APPROACH}_consumer.csv \
             --run-id $RUN_ID \
+            --timestamps-csv ~/results/${RUN_ID}_timestamps.csv \
+            --ts-sample-every 1000 \
             > ~/results/${RUN_ID}_consumer.log 2>&1 &
         echo \$!
     " > /tmp/consumer_pid_${run}
@@ -64,6 +66,7 @@ for run in $(seq 1 $NUM_RUNS); do
         --bind $HOME/pipeline_data:/opt/dataset \
         --bind "${OUT_DIR}":/opt/results \
         --bind $HOME/experiments:/opt/experiments \
+        --bind $HOME/experiments/5gb/scripts:/opt/scripts \
         $SIF \
         spark-submit \
             --master "$SPARK_MASTER" \

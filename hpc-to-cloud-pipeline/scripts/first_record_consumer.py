@@ -34,6 +34,10 @@ def main():
                     help="Stop after this many ms with no new records")
     ap.add_argument("--output", default=None, help="Append CSV results here")
     ap.add_argument("--run-id", default="run", help="Label for this run")
+    ap.add_argument("--timestamps-csv", default=None,
+                    help="If set, log every Nth record's arrival timestamp to this file for tail-latency analysis")
+    ap.add_argument("--ts-sample-every", type=int, default=1000,
+                    help="Sample period for --timestamps-csv (default: every 1000 records)")
     args = ap.parse_args()
 
     from confluent_kafka import Consumer
@@ -55,6 +59,7 @@ def main():
     count = 0
     total_bytes = 0
     idle_ms = 0
+    ts_samples = []  # list of (record_index, wall_clock) for tail-latency analysis
 
     print(f"[{time.strftime('%H:%M:%S')}] Consumer started, waiting for records on '{args.topic}'...")
 
@@ -83,6 +88,9 @@ def main():
             if v:
                 total_bytes += len(v)
             count += 1
+
+            if args.timestamps_csv and (count % args.ts_sample_every == 0):
+                ts_samples.append((count, now))
 
             if count % 500000 == 0:
                 elapsed = now - first_record_wall
@@ -129,6 +137,15 @@ def main():
             w.writerow([args.run_id, count, f"{total_mb:.2f}", f"{frl:.2f}",
                         f"{active_s:.2f}", f"{consumer_total_s:.2f}", f"{throughput:.2f}"])
         print(f"Results appended to {args.output}")
+
+    if args.timestamps_csv and ts_samples:
+        os.makedirs(os.path.dirname(args.timestamps_csv) or ".", exist_ok=True)
+        with open(args.timestamps_csv, "w") as f:
+            w = csv.writer(f)
+            w.writerow(["run_id", "record_index", "wall_clock_s"])
+            for idx, ts in ts_samples:
+                w.writerow([args.run_id, idx, f"{ts:.6f}"])
+        print(f"Timestamp samples ({len(ts_samples)} rows) written to {args.timestamps_csv}")
 
 
 if __name__ == "__main__":

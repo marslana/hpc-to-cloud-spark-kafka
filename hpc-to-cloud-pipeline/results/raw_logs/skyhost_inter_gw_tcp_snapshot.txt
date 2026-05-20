@@ -1,0 +1,18 @@
+# SkyHOST inter-gateway TCP snapshot
+# Collected during A5 (5GB pipeline) on the EU-Central SkyHOST gateway VM.
+# EU gateway HOST -> US gateway (IPs redacted)
+# CLI: skyplane stream ... --send-connections 8 --reader-processes 8 --writer-processes 8 --batch-size-mb 32
+
+## All ESTABLISHED connections from EU gateway HOST to US gateway:
+tcp        0      0 <eu-gw>:34084         <us-gw>:37409     ESTABLISHED
+tcp        0      0 <eu-gw>:36950         <us-gw>:42683     ESTABLISHED
+tcp        0 1259237 <eu-gw>:54116         <us-gw>:56773     ESTABLISHED
+tcp        0      0 <eu-gw>:57410         <us-gw>:45411     ESTABLISHED
+tcp        0      0 <eu-gw>:34524         <us-gw>:39125     ESTABLISHED
+tcp        0 879960 <eu-gw>:44762         <us-gw>:59075     ESTABLISHED
+tcp        0      0 <eu-gw>:45022         <us-gw>:39521     ESTABLISHED
+tcp        0      0 <eu-gw>:36096         <us-gw>:48637     ESTABLISHED
+tcp        0    750 <eu-gw>:58984         <us-gw>:8081      ESTABLISHED
+
+## Summary: 9 total (8081=skyplane control RPC, others=data sender connections)
+## Data-channel connections: 8  (matches --send-connections 8)
