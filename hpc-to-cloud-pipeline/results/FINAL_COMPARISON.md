@@ -27,10 +27,6 @@ This file summarizes the final 5 GB results used in the paper.
 | 4 | MM2 Replication | Stream | 234 (4.6) | 35.6 (1.4) | 7.94 |
 | 5 | SkyHOST | Stream | 210 (6.8) | 36.2 (0.6) | 9.04 |
 
-> Note: E2E used in the paper for Direct Producer is the orchestration-script
-> wall-clock (`e2e_s`, mean 687 s) which adds the HPC-side setup time; the
-> consumer-measured E2E (`consumer_total_s`, mean 676 s) is reported in the
-> per-run CSV above.
 
 ## Tail Latency (inter-batch, ms)
 

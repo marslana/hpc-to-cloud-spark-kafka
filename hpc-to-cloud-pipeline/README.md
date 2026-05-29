@@ -34,7 +34,7 @@ Edit the placeholders in `configs/experiment.conf` before running.
 | # | Approach              | Type   | E2E (s)    | FRL (s)     | TP (MB/s) |
 | - | --------------------- | ------ | ---------- | ----------- | --------- |
 | 1 | Cloud-Side Processing | Batch  | 368        | 339         | -         |
-| 2 | Direct Producer       | Stream | 687        | 35.8 (0.4)  | 2.45      |
+| 2 | Direct Producer       | Stream | 676        | 35.8 (0.4)  | 2.45      |
 | 3 | HPC-Side Processing   | Batch  | 187 (1.2)  | 103.2 (1.2) | 6.90      |
 | 4 | MM2 Replication       | Stream | 234 (4.6)  | 35.6 (1.4)  | 7.94      |
 | 5 | SkyHOST               | Stream | 210 (6.8)  | 36.2 (0.6)  | 9.04      |
