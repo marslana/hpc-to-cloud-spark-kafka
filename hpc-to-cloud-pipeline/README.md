@@ -113,10 +113,10 @@ For more detail on the Aion-side command sequence, see `HPC_COMMANDS.md`.
 
 | Approach   | Key columns                                                                                                                  |
 | ---------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| Approach 1 | `scp_time_s`, `spark_read_s`, `spark_filter_s`, `kafka_produce_s`, `consumer_first_record_s`, `consumer_total_s`             |
-| Approach 2 | `read_time_s`, `filter_time_s`, `kafka_produce_time_s`, `total_time_s`                                                       |
-| Approach 3 | `spark_read_s`, `spark_filter_s`, `spark_write_s`, `scp_time_s`, `ingest_time_s`, `consumer_first_record_s`, `consumer_total_s` |
-| Approach 4 | `hpc_read_s`, `hpc_filter_s`, `hpc_produce_s`, `consumer_first_record_s`, `consumer_active_s`, `consumer_total_s`            |
-| Approach 5 | `hpc_read_s`, `hpc_filter_s`, `hpc_produce_s`, `consumer_first_record_s`, `consumer_active_s`, `consumer_total_s`            |
+| Approach 1 | `scp_time_s`, `spark_read_s`, `spark_filter_s`, `kafka_produce_s`, `consumer_first_record_s`, `e2e_s`             |
+| Approach 2 | `spark_read_s`, `spark_filter_s`, `kafka_produce_s`, `spark_total_s`, `consumer_first_record_s`, `e2e_s`                     |
+| Approach 3 | `spark_read_s`, `spark_filter_s`, `spark_write_s`, `scp_time_s`, `ingest_time_s`, `consumer_first_record_s`, `e2e_s` |
+| Approach 4 | `hpc_read_s`, `hpc_filter_s`, `hpc_produce_s`, `consumer_first_record_s`, `consumer_active_s`, `e2e_s`            |
+| Approach 5 | `hpc_read_s`, `hpc_filter_s`, `hpc_produce_s`, `consumer_first_record_s`, `consumer_active_s`, `e2e_s`            |
 
-E2E reported in the paper is `consumer_total_s` for Approaches 1, 3, 4, 5 and `total_time_s` for Approach 2. FRL comes from `consumer_first_record_s` (Approaches 1, 3, 4, 5) and from the producer-side first-acknowledgement timestamp for Approach 2. The consumer process is launched a few seconds before the pipeline kickoff, so `consumer_total_s` covers the full HPC processing, intermediate transit, and final delivery to the destination broker.
+E2E reported in the paper is `e2e_s` and FRL is `consumer_first_record_s`, for all five approaches. Both are measured at the destination consumer, which is launched a few seconds before the pipeline kickoff: its startup wall-clock is the zero point, FRL is the time until the first record arrives, and `e2e_s` is the time until the last record arrives. `e2e_s` therefore covers the full HPC processing, intermediate transit, and final delivery to the destination broker, and excludes one-time service provisioning (Spark session and connector startup).

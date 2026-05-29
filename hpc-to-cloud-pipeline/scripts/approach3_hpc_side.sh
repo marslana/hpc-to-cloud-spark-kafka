@@ -17,7 +17,7 @@ OUT_DIR="${RESULTS_BASE}/${APPROACH}"
 mkdir -p "$OUT_DIR"
 RESULTS_CSV="${OUT_DIR}/results_$(timestamp).csv"
 
-echo "run_id,dataset_gb,spark_read_s,spark_filter_s,spark_write_s,spark_total_s,filtered_records,filtered_mb,scp_time_s,ingest_time_s,ingest_mbps,consumer_first_record_s,consumer_active_s,consumer_total_s,consumer_records,consumer_bytes_mb,e2e_s" > "$RESULTS_CSV"
+echo "run_id,dataset_gb,spark_read_s,spark_filter_s,spark_write_s,spark_total_s,filtered_records,filtered_mb,scp_time_s,ingest_time_s,ingest_mbps,consumer_first_record_s,consumer_active_s,e2e_s,consumer_records,consumer_bytes_mb" > "$RESULTS_CSV"
 
 COORDINATOR_NODE=$(cat $HOME/coordinatorNode 2>/dev/null || hostname)
 SPARK_MASTER="spark://${COORDINATOR_NODE}:7078"
@@ -128,7 +128,7 @@ for run in $(seq 1 $NUM_RUNS); do
     CONS_RECORDS=$(echo "$CONSUMER_LOG" | grep -oP 'records:\s+\K[0-9]+' || echo "0")
     CONS_MB=$(echo "$CONSUMER_LOG" | grep -oP 'bytes_mb:\s+\K[0-9.]+' || echo "0")
 
-    echo "${RUN_ID},5,${SPARK_READ},${SPARK_FILTER},${SPARK_WRITE},${SPARK_TOTAL},${FILTERED},${FILTERED_MB},${SCP_TIME},${INGEST_TIME},${INGEST_MBPS},${CONS_FRL},${CONS_ACTIVE},${CONS_TOTAL},${CONS_RECORDS},${CONS_MB},${E2E_TIME}" >> "$RESULTS_CSV"
+    echo "${RUN_ID},5,${SPARK_READ},${SPARK_FILTER},${SPARK_WRITE},${SPARK_TOTAL},${FILTERED},${FILTERED_MB},${SCP_TIME},${INGEST_TIME},${INGEST_MBPS},${CONS_FRL},${CONS_ACTIVE},${CONS_TOTAL},${CONS_RECORDS},${CONS_MB}" >> "$RESULTS_CSV"
 
     log "=== RUN $run SUMMARY ==="
     log "  Spark:             ${SPARK_TOTAL}s (read=${SPARK_READ} filter=${SPARK_FILTER} write=${SPARK_WRITE})"

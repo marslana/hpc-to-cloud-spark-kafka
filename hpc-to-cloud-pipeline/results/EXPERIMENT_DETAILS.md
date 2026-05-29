@@ -51,8 +51,8 @@ python3 hpc-to-cloud-pipeline/scripts/generate_eea_dataset.py \
 - Spark Kafka producer batch size: 16 KB
 - Spark Kafka producer linger: 10 ms
 - Number of runs per approach: 3
-- Consumer idle timeout in scripts: 60 s after the last record (used only by the orchestrator to declare the run finished, not part of `consumer_total_s`)
-- E2E metric reported in the paper: `consumer_total_s` averaged over 3 runs for all five approaches, measured by a consumer script on the destination broker. The consumer is launched a few seconds before the pipeline kickoff so its clock covers the full HPC processing, intermediate transit, and final delivery. The consumer's post-completion idle-timeout window is excluded from both `consumer_total_s` and `first_record_latency_s`.
+- Consumer idle timeout in scripts: 60 s after the last record (used only by the orchestrator to declare the run finished, not part of `e2e_s`)
+- E2E metric reported in the paper: `e2e_s` averaged over 3 runs for all five approaches, measured by a consumer script on the destination broker. The consumer is launched a few seconds before the pipeline kickoff so its clock covers the full HPC processing, intermediate transit, and final delivery. The consumer's post-completion idle-timeout window is excluded from both `e2e_s` and `consumer_first_record_s`.
 
 ## Approach-Specific Configuration
 

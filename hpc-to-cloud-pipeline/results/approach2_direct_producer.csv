@@ -1,4 +1,4 @@
-run_id,dataset_gb,spark_read_s,spark_filter_s,kafka_produce_s,spark_total_s,kafka_throughput_mbps,filtered_records,consumer_first_record_s,consumer_active_s,consumer_total_s,consumer_records,consumer_bytes_mb,consumer_throughput_mbps,e2e_s
-approach2_run1,5,11.43,16.07,640.96,668.48,0.92,9317527,35.98,639.52,675.50,9317527,1571.75,2.46,743
-approach2_run2,5,11.13,15.64,642.89,669.68,0.91,9317527,35.32,641.46,676.78,9317527,1571.75,2.45,744
-approach2_run3,5,11.34,16.23,642.20,669.79,0.92,9317527,36.05,640.77,676.82,9317527,1571.75,2.45,744
+run_id,dataset_gb,spark_read_s,spark_filter_s,kafka_produce_s,spark_total_s,kafka_throughput_mbps,filtered_records,consumer_first_record_s,consumer_active_s,e2e_s,consumer_records,consumer_bytes_mb,consumer_throughput_mbps
+approach2_run1,5,11.43,16.07,640.96,668.48,0.92,9317527,35.98,639.52,675.50,9317527,1571.75,2.46
+approach2_run2,5,11.13,15.64,642.89,669.68,0.91,9317527,35.32,641.46,676.78,9317527,1571.75,2.45
+approach2_run3,5,11.34,16.23,642.20,669.79,0.92,9317527,36.05,640.77,676.82,9317527,1571.75,2.45

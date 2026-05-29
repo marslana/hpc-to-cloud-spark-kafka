@@ -1,4 +1,4 @@
-run_id,dataset_gb,spark_read_s,spark_filter_s,spark_write_s,spark_total_s,filtered_records,filtered_mb,scp_time_s,ingest_time_s,ingest_mbps,consumer_first_record_s,consumer_active_s,consumer_total_s,consumer_records,consumer_bytes_mb,e2e_s
-approach3_run1,5,10.74,15.12,23.37,49.23,9317527,590.0,42,84.93,6.95,102.37,83.82,186.19,9317527,576.53,247
-approach3_run2,5,10.81,15.45,23.55,49.81,9317527,590.0,42,84.42,6.99,104.57,83.74,188.31,9317527,576.53,248
-approach3_run3,5,10.57,15.52,23.65,49.74,9317527,590.0,42,84.79,6.96,102.78,83.30,186.08,9317527,576.53,247
+run_id,dataset_gb,spark_read_s,spark_filter_s,spark_write_s,spark_total_s,filtered_records,filtered_mb,scp_time_s,ingest_time_s,ingest_mbps,consumer_first_record_s,consumer_active_s,e2e_s,consumer_records,consumer_bytes_mb
+approach3_run1,5,10.74,15.12,23.37,49.23,9317527,590.0,42,84.93,6.95,102.37,83.82,186.19,9317527,576.53
+approach3_run2,5,10.81,15.45,23.55,49.81,9317527,590.0,42,84.42,6.99,104.57,83.74,188.31,9317527,576.53
+approach3_run3,5,10.57,15.52,23.65,49.74,9317527,590.0,42,84.79,6.96,102.78,83.30,186.08,9317527,576.53

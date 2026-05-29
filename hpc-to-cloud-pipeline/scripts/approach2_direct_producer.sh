@@ -17,7 +17,7 @@ OUT_DIR="${RESULTS_BASE}/${APPROACH}"
 mkdir -p "$OUT_DIR"
 RESULTS_CSV="${OUT_DIR}/results_$(timestamp).csv"
 
-echo "run_id,dataset_gb,spark_read_s,spark_filter_s,kafka_produce_s,spark_total_s,kafka_throughput_mbps,filtered_records,consumer_first_record_s,consumer_active_s,consumer_total_s,consumer_records,consumer_bytes_mb" > "$RESULTS_CSV"
+echo "run_id,dataset_gb,spark_read_s,spark_filter_s,kafka_produce_s,spark_total_s,kafka_throughput_mbps,filtered_records,consumer_first_record_s,consumer_active_s,e2e_s,consumer_records,consumer_bytes_mb" > "$RESULTS_CSV"
 
 COORDINATOR_NODE=$(cat $HOME/coordinatorNode 2>/dev/null || hostname)
 SPARK_MASTER="spark://${COORDINATOR_NODE}:7078"
