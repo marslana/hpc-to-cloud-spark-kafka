@@ -6,7 +6,7 @@ Usage:
     python3 generate_all_figures.py [--data-dir PATH] [--output-dir PATH]
 
 By default, the script auto-detects the data directory relative to its own
-location (looks for ../hpc-characterization/data first).
+location (works from both paper/ and paper/artifacts/figures/).
 """
 
 import matplotlib
@@ -56,7 +56,7 @@ def _find_data_dir():
 
 def _setup_style():
     plt.rcParams.update({
-        'font.size': 10,
+        'font.size': 15,
         'font.family': 'serif',
         'font.serif': ['Times New Roman', 'DejaVu Serif', 'serif'],
         'mathtext.fontset': 'dejavuserif',
@@ -64,12 +64,12 @@ def _setup_style():
         'axes.grid': True,
         'grid.alpha': 0.25,
         'grid.linestyle': '--',
-        'legend.fontsize': 8.5,
+        'legend.fontsize': 14,
         'legend.framealpha': 0.9,
-        'axes.labelsize': 11,
-        'axes.titlesize': 11,
-        'xtick.labelsize': 9,
-        'ytick.labelsize': 9,
+        'axes.labelsize': 18,
+        'axes.titlesize': 18,
+        'xtick.labelsize': 15,
+        'ytick.labelsize': 15,
         'figure.dpi': 300,
         'savefig.bbox': 'tight',
         'savefig.pad_inches': 0.05,
@@ -128,7 +128,7 @@ def extract_consumer_1group(rows, msg_sizes=None):
     return result
 
 
-def load_spark_runs(data_dir, batch_filter='nobatch'):
+def load_spark_runs(data_dir, batch_filter='16384b'):
     """Load 3 Spark CSVs, return dict  (partitions, record_size) -> [v1,v2,v3]."""
     combined = {}
     for run_dir in SPARK_RUN_DIRS:
@@ -148,20 +148,13 @@ def fig2_native_kafka_producer(native_rows, output_dir):
     prod = extract_producer(native_rows, '1')
     cons = extract_consumer_1group(native_rows)
 
-    fig, axes = plt.subplots(1, 3, figsize=(11, 3.5), sharey=True)
+    fig, axes = plt.subplots(1, 3, figsize=(8, 2.25), sharey=True)
     for i, (sz, label) in enumerate(zip(NATIVE_MSG_SIZES, MSG_LABELS)):
         ax = axes[i]
         ax.plot(PARTITIONS, prod[sz], '-o', color=BLUE, linewidth=1.8,
                 markersize=6, label='Producer', zorder=5)
         ax.plot(PARTITIONS, cons[sz], '-s', color=GREEN, linewidth=1.8,
                 markersize=6, label='Consumer', zorder=5)
-        for j, p in enumerate(PARTITIONS):
-            ax.annotate(f'{prod[sz][j]:.1f}', (p, prod[sz][j]),
-                        textcoords='offset points', xytext=(0, 8),
-                        fontsize=7.5, ha='center', color=BLUE)
-            ax.annotate(f'{cons[sz][j]:.1f}', (p, cons[sz][j]),
-                        textcoords='offset points', xytext=(0, -12),
-                        fontsize=7.5, ha='center', color=GREEN)
         ax.set_title(label, fontweight='bold')
         ax.set_xlabel('Partitions')
         ax.set_xticks(PARTITIONS)
@@ -170,7 +163,7 @@ def fig2_native_kafka_producer(native_rows, output_dir):
     axes[0].set_ylabel('Throughput (MB/s)')
     axes[-1].legend(loc='center right', frameon=True)
     fig.suptitle('Native Kafka Throughput (acks=1, 1M msg/s target)',
-                 fontweight='bold', fontsize=11.5, y=1.01)
+                 fontweight='bold', fontsize=18, y=1.01)
     fig.tight_layout()
     _save(fig, 'fig2_native_kafka_throughput', output_dir)
 
@@ -235,7 +228,7 @@ def fig4_spark_kafka_throughput(spark_data, output_dir):
     ax.set_ylabel('Throughput (MB/s)')
     ax.set_xlabel('Message Size')
     ax.set_title('Spark-Kafka Structured Streaming Throughput\n'
-                 '(acks=1, mean of 3 runs \u00b1 std)',
+                 '(16 KB batch, acks=1, mean of 3 runs \u00b1 std)',
                  fontweight='bold', fontsize=11.5)
     ax.set_xticks(x_base + 1.5 * bar_w)
     ax.set_xticklabels(MSG_LABELS)
@@ -248,21 +241,26 @@ def fig4_spark_kafka_throughput(spark_data, output_dir):
 def fig5_spark_vs_native(native_rows, spark_data, output_dir):
     native_prod = extract_producer(native_rows, '1')
 
-    spark_means = {}
+    spark_means, spark_stds = {}, {}
     for sz_native, sz_spark in zip(NATIVE_MSG_SIZES, SPARK_RECORD_SIZES):
-        vals = []
+        means, stds = [], []
         for p in PARTITIONS:
             runs = spark_data.get((p, sz_spark), [0.0])
-            vals.append(np.mean(runs))
-        spark_means[sz_native] = vals
+            means.append(np.mean(runs))
+            stds.append(np.std(runs))
+        spark_means[sz_native] = means
+        spark_stds[sz_native] = stds
 
-    fig, axes = plt.subplots(1, 3, figsize=(11, 3.5), sharey=True)
+    fig, axes = plt.subplots(1, 3, figsize=(8, 2.25), sharey=True)
     for i, (sz, label) in enumerate(zip(NATIVE_MSG_SIZES, MSG_LABELS)):
         ax = axes[i]
         ax.plot(PARTITIONS, native_prod[sz], '-o', color=BLUE, linewidth=1.8,
                 markersize=6, label='Native Kafka CLI', zorder=5)
-        ax.plot(PARTITIONS, spark_means[sz], '-s', color=RED, linewidth=1.8,
-                markersize=6, label='Spark Structured\nStreaming', zorder=5)
+        ax.errorbar(PARTITIONS, spark_means[sz], yerr=spark_stds[sz],
+                    fmt='-s', color=RED, linewidth=1.8, markersize=6,
+                    capsize=4, elinewidth=1.0,
+                    label='Spark Structured\nStreaming (mean$\\pm$std, n=3)',
+                    zorder=5)
         ax.fill_between(PARTITIONS, native_prod[sz], spark_means[sz],
                         alpha=0.08, color=RED)
         ax.set_title(label, fontweight='bold')
@@ -271,9 +269,9 @@ def fig5_spark_vs_native(native_rows, spark_data, output_dir):
         ax.set_ylim(0, 200)
 
     axes[0].set_ylabel('Throughput (MB/s)')
-    axes[-1].legend(loc='lower right', fontsize=8, frameon=True)
+    axes[-1].legend(loc='lower right', fontsize=13, frameon=True)
     fig.suptitle('Native Kafka CLI vs. Spark Structured Streaming',
-                 fontweight='bold', fontsize=11.5, y=1.01)
+                 fontweight='bold', fontsize=18, y=1.01)
     fig.tight_layout()
     _save(fig, 'fig5_spark_vs_native', output_dir)
 

@@ -7,10 +7,19 @@ This part of the repository covers the HPC streaming benchmarks reported in Sect
 | Sub-experiment            | Source data                                                                            | Configurations |
 | ------------------------- | -------------------------------------------------------------------------------------- | -------------- |
 | Native Kafka              | `data/native_kafka/kafka_perf_results.csv`                                             | 168 measurements (72 producer-only + 36 consumer-only + 24 e2e-producer + 36 e2e-consumer) |
-| Spark Structured Streaming| `data/spark_kafka/spark_kafka_test_*/spark_producer_results.csv` (3 timestamped runs)  | 24 distinct configurations averaged over 3 runs |
+| Spark Structured Streaming| `data/spark_kafka/spark_kafka_test_*/spark_producer_results.csv` (3 timestamped runs)  | 24 distinct configurations averaged over 3 runs (12 partition/record-size pairs x 2 producer batch settings) |
 | Broker scaling and RF     | `data/multi_broker/scaling_bench_{1,2,3}br_*.csv`                                      | 36 configurations at 10 KB (6 broker/RF combinations x 3 partitions x 2 acks) |
+| Replication rerun         | `data/multi_broker/rf_rerun_10kb_*.csv`                                                | 12 configurations at 10 KB on 3 brokers (RF {1,3} x 3 partitions x 2 acks), 3 runs each |
 
 For native Kafka, `producer` and `consumer` rows measure each tool in isolation, while `e2e-producer` and `e2e-consumer` rows measure them running simultaneously. The paper's end-to-end throughput table uses the `e2e-*` rows.
+
+## Mapping to the paper
+
+This repository publishes the full sweep; the paper reports subsets of it.
+
+- The Spark `batch_size` column distinguishes `16384b` (Kafka's default `batch.size`) from `nobatch` (`batch.size=0`, batching explicitly disabled). The paper characterizes Spark under default producer settings, so its figures use the 12 `16384b` configurations across 3 runs. The `nobatch` runs are published as a contrast point and are not reported in the paper.
+- The paper's replication table (3 brokers, 10 KB) is the 3-run mean of `rf_rerun_10kb_*.csv`. The broker-count comparison is drawn from `scaling_bench_{1,2,3}br_*.csv`.
+- The paper's native Kafka count of 60 configurations covers 24 producer, 24 consumer, and 12 producer/consumer pairs at `acks=1`; the CSV additionally carries the second consumer-group setting for the simultaneous runs and the per-run repeats.
 
 ## Sweep parameters
 

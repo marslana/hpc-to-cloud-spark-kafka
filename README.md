@@ -2,7 +2,7 @@
 
 Evaluation of Apache Spark and Apache Kafka for streaming HPC-processed scientific data to the cloud. The repository is organized around the two parts of the study:
 
-1. **`hpc-characterization/`** — Spark-Kafka streaming performance on an HPC cluster deployed via Singularity containers on SLURM (60 native Kafka measurements, 12 Spark Structured Streaming configurations, and 36 broker-scaling configurations under RF 1--3).
+1. **`hpc-characterization/`** — Spark-Kafka streaming performance on an HPC cluster deployed via Singularity containers on SLURM. The paper reports 60 native Kafka measurements, 12 Spark Structured Streaming configurations, and 36 broker-scaling configurations under RF 1--3; the full sweep behind those numbers is published here (see `hpc-characterization/README.md` for the mapping).
 2. **`hpc-to-cloud-pipeline/`** — Five end-to-end delivery pipelines from HPC to AWS EC2 over WAN, evaluated on a 5 GB EEA air-quality dataset.
 
 ## Pipeline Approaches
